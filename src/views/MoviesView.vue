@@ -28,6 +28,13 @@
   const getGenreName = (id) => genres.value.find((genre) => genre.id === id).name
   const formatDate = (date) => new Date(date).toLocaleDateString('pt-BR');
 };
+import { useRouter } from 'vue-router'
+const router = useRouter()
+
+
+function openMovie(movieId) {
+  router.push({ name: 'MovieDetails', params: { movieId } });
+}
 </script>
 <template>
   <h1>Filmes</h1>
@@ -60,6 +67,11 @@
   </span>
 </p>
 <p class="movie-release-date">{{ formatDate(movie.release_date) }}</p>
+<img
+  :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`"
+  :alt="movie.title"
+  @click="openMovie(movie.id)"
+/>
 </template>
 <style scoped>
 .genre-list {
