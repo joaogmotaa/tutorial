@@ -26,6 +26,11 @@ const routes = [
   name: 'tvDetails',
   component: () => import('../views/TvDetails.vue')
 
+,
+  path: '/filmes/:movieId',
+  name: 'MovieDetails',
+  component: () => import('../views/MovieDetailsView.vue'),
+  props: true,
 },
 {
   path: "/favoritos",
