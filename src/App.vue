@@ -4,13 +4,15 @@
   <header>
     <nav>
       <router-link to="/">Home</router-link>
-      <router-link to="/filmes">Filmes</router-link>
-      <router-link to="/tv">Programas de TV</router-link>
+      <router-link to="/filmes">Filmes de Comédia</router-link>
+      <router-link to="/tv">Programas de TV de Comédia</router-link>
+      <router-link to="/favoritos">Favoritos</router-link>
     </nav>
   </header>
   <main>
     <router-view />
   </main>
+  
 </template>
 
 <style scoped>

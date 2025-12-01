@@ -3,16 +3,16 @@ import { ref, onMounted } from "vue"
 import { useRoute } from "vue-router"
 
 const route = useRoute()
-const movie = ref(null)
+const show = ref(null)
 const loading = ref(true)
 
 const API_KEY = "9a7da082db1aaf1a3d543ef8882edeb6"
 
 async function fetchDetails() {
-  const res = await fetch(
-    `https://api.themoviedb.org/3/movie/${route.params.id}?api_key=${API_KEY}&language=pt-BR`
+  const response = await fetch(
+    `https://api.themoviedb.org/3/tv/${route.params.id}?api_key=${API_KEY}&language=pt-BR`
   )
-  movie.value = await res.json()
+  show.value = await response.json()
   loading.value = false
 }
 
@@ -23,15 +23,15 @@ onMounted(fetchDetails)
   <div v-if="loading" class="loading">Carregando...</div>
 
   <div v-else class="details">
-    <h1>{{ movie.title }}</h1>
+    <h1>{{ show.name }}</h1>
 
     <img
-      :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`"
-      :alt="movie.title"
+      :src="`https://image.tmdb.org/t/p/w500${show.poster_path}`"
+      :alt="show.name"
     />
 
-    <p><strong>Lançamento:</strong> {{ movie.release_date }}</p>
-    <p class="overview">{{ movie.overview }}</p>
+    <p><strong>Lançamento:</strong> {{ show.first_air_date }}</p>
+    <p class="overview">{{ show.overview }}</p>
   </div>
 </template>
 

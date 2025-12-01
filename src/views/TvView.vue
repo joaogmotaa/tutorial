@@ -1,47 +1,110 @@
 <script setup>
-  import { ref, onMounted } from 'vue';
-  import api from '@/plugins/axios';
+import { ref, onMounted } from 'vue'
 
-  const genres = ref([]);
+import { useRouter } from 'vue-router'
+const router = useRouter()
 
-  onMounted(async () => {
-    const response = await api.get('genre/tv/list?language=pt-BR');
-    genres.value = response.data.genres;
-  });
+function goToDetails(id) {
+  router.push(`/tv/${id}`)
+}
+
+
+const tvShows = ref([])
+const loading = ref(true)
+const error = ref(null)
+
+const API_KEY = "9a7da082db1aaf1a3d543ef8882edeb6" // coloque sua key aqui
+
+async function fetchTvShows() {
+  loading.value = true
+  try {
+    const response = await fetch(
+      `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&with_genres=35&language=pt-BR`
+    )
+
+    if (!response.ok) {
+      throw new Error("Erro ao carregar séries")
+    }
+
+    const data = await response.json()
+    tvShows.value = data.results
+  } catch (err) {
+    error.value = err.message
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(fetchTvShows)
 </script>
 
 <template>
-  <h1>Programas de TV</h1>
-  <ul class="genre-list">
-    <li v-for="genre in genres" :key="genre.id" class="genre-item">
-      {{ genre.name }}
-    </li>
-  </ul>
+  <div class="tv-container">
+    <h1>Programas de TV – Comédia</h1>
+
+    <div v-if="loading" class="loading">Carregando...</div>
+    <div v-if="error" class="error">{{ error }}</div>
+
+    <div class="tv-grid">
+      <div class="tv-card"
+          v-for="show in tvShows"
+          :key="show.id"
+          @click="goToDetails(show.id)">
+        
+        <img :src="`https://image.tmdb.org/t/p/w500${show.poster_path}`"
+             :alt="show.name" />
+
+        <h2>{{ show.name }}</h2>
+        <p>{{ show.first_air_date }}</p>
+      </div>
+    </div>
+  </div>
 </template>
 
+
 <style scoped>
-  .genre-list {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 2rem;
-    list-style: none;
-    padding: 0;
-  }
+.tv-container {
+  padding: 20px;
+  text-align: center;
+}
 
-  .genre-item {
-    background-color: #5d6424;
-    border-radius: 1rem;
-    padding: 0.5rem 1rem;
-    align-self: center;
-    color: #fff;
-    display: flex;
-    justify-content: center;
-  }
+.tv-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 5rem;
+  margin-top: 20px;
+}
 
-  .genre-item:hover {
-    cursor: pointer;
-    background-color: #7d8a2e;
-    box-shadow: 0 0 0.5rem #5d6424;
-  }
+.tv-card {
+  background: #111;
+  border-radius: 10px;
+  padding: 10px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  width: 15rem;
+  height: 28rem;
+}
+
+.tv-card:hover {
+  transform: scale(1.05);
+}
+
+img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+h2 {
+  font-size: 1rem;
+  margin: 10px 0 5px;
+}
+
+p {
+  opacity: 0.7;
+  font-size: 0.9rem;
+  color: #ffffff;
+}
+h2{
+  color: #ffffff;
+}
 </style>
