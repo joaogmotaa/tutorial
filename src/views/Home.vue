@@ -1,3 +1,31 @@
+<script setup>
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const comedyTop = ref([])
+
+function fetchComedyTopRated() {
+  fetch(
+    "https://api.themoviedb.org/3/discover/movie?api_key=9a7da082db1aaf1a3d543ef8882edeb6&with_genres=35&sort_by=vote_average.desc&vote_count.gte=1000&language=pt-BR&page=1"
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      comedyTop.value = data.results
+    })
+}
+
+function openMovie(id) {
+  router.push(`/movie/${id}`)
+}
+
+// Chama a função quando o componente for montado
+onMounted(() => {
+  fetchComedyTopRated()
+})
+</script>
+
+
 <template>
   <div class="home">
     <header class="hero">
@@ -11,7 +39,7 @@
           class="movie-card" 
           v-for="movie in comedyTop" 
           :key="movie.id"
-          @click="goToMovieDetails(movie.id)"
+          @click="openMovie(movie.id)"
         >
           <img :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`" :alt="movie.title" />
           <h3>{{ movie.title }}</h3>
@@ -21,35 +49,6 @@
     </section>
   </div>
 </template>
-
-<script>
-export default {
-  name: "Home",
-  data() {
-    return {
-      comedyTop: [],
-    };
-  },
-  methods: {
-    fetchComedyTopRated() {
-      fetch(
-        "https://api.themoviedb.org/3/discover/movie?api_key=9a7da082db1aaf1a3d543ef8882edeb6&with_genres=35&sort_by=vote_average.desc&vote_count.gte=1000&language=pt-BR&page=1"
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          this.comedyTop = data.results;
-        });
-    },
-    goToMovieDetails(id) {
-      this.$router.push({ name: 'HomeDetails', params: { id } });
-    },
-  },
-  mounted() {
-    this.fetchComedyTopRated();
-  },
-};
-</script>
-
 <style scoped>
 .home {
   padding: 20px;

@@ -63,7 +63,7 @@ header {
   height: 3rem;
   width: auto;
   object-fit: contain;
-  margin-left: 50rem;
+  margin-left: 33rem;
 }
 
 nav {
