@@ -5,6 +5,8 @@ import { useRoute } from "vue-router"
 const route = useRoute()
 const show = ref(null)
 const loading = ref(true)
+const props = defineProps(['id'])
+
 
 const API_KEY = "9a7da082db1aaf1a3d543ef8882edeb6"
 

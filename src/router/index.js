@@ -1,48 +1,52 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router'
+
+import Home from '@/views/Home.vue'
+import MoviesView from '@/views/MoviesView.vue'
+import MovieDetailsView from '@/views/MovieDetailsView.vue'
+import TvView from '@/views/TvView.vue'
+import TvDetails from '@/views/TvDetails.vue'
+import FavoritesView from '@/views/FavoritesView.vue'
 
 const routes = [
   {
     path: '/',
     name: 'Home',
-    component: () => import('../views/Home.vue'),
+    component: Home
   },
   {
-    path: '/filmes',
+    path: '/movies',
     name: 'Movies',
-    component: () => import('../views/MoviesView.vue'),
+    component: MoviesView
   },
+  {
+  path: '/movie/:id',
+  name: 'MovieDetails',
+  component: () => import('@/views/MovieDetailsView.vue'),
+  props: true
+}
+,
   {
     path: '/tv',
-    name: 'TV',
-    component: () => import('../views/TvView.vue'),
+    name: 'Tv',
+    component: TvView
   },
   {
-  path: "/movie/:id",
-  name: "MovieDetails",
-  component: () => import("../views/MovieDetailsView.vue")
-  }
-,{
-  path: '/tv/:id',
-  name: 'tvDetails',
-  component: () => import('../views/TvDetails.vue')
-
-,
-  path: '/filmes/:movieId',
-  name: 'MovieDetails',
-  component: () => import('../views/MovieDetailsView.vue'),
-  props: true,
-},
-{
-  path: "/favoritos",
-  name: "Favorites",
-  component: () => import("../views/FavoritesView.vue")
-}
-
-];
+    path: '/tv/:id',
+    name: 'TvDetails',
+    component: TvDetails,
+    props: true
+  },
+  {
+    path: '/favorites',
+    name: 'Favorites',
+    component: FavoritesView
+  },
+  
+]
 
 const router = createRouter({
   history: createWebHistory(),
-  routes,
-});
+  routes
+})
 
-export default router;
+export default router

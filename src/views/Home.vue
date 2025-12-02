@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <header class="hero">
-      <h1>Melhores Filmes de Comédia 😂</h1>
+      <h1>Melhores Filmes de Comédia</h1>
       <p>Os mais bem avaliados do cinema para você rir sem parar!</p>
     </header>
 
@@ -13,14 +13,9 @@
           :key="movie.id"
           @click="goToMovieDetails(movie.id)"
         >
-          <img 
-            :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`" 
-            :alt="movie.title"
-          />
+          <img :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`" :alt="movie.title" />
           <h3>{{ movie.title }}</h3>
-          <p class="rating">
-            ⭐ {{ movie.vote_average.toFixed(1) }}
-          </p>
+          <p class="rating">⭐ {{ movie.vote_average.toFixed(1) }}</p>
         </div>
       </div>
     </section>
@@ -46,7 +41,7 @@ export default {
         });
     },
     goToMovieDetails(id) {
-      this.$router.push({ name: 'MovieDetailsView', params: { id } });
+      this.$router.push({ name: 'HomeDetails', params: { id } });
     },
   },
   mounted() {
@@ -58,7 +53,7 @@ export default {
 <style scoped>
 .home {
   padding: 20px;
-  color: #000000;
+  color: #ffffff;
 }
 
 .hero {
@@ -69,20 +64,19 @@ export default {
 .hero h1 {
   font-size: 2.3rem;
   font-weight: bold;
+  color: #111;
 }
 
 .hero p {
   font-size: 1.2rem;
   opacity: 0.9;
-}
-.movies-section h3{
-color:#ffffff;
+  color: #111;
 }
 
 .movies-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 80px;
+  gap: 40px;
   justify-items: center;
 }
 

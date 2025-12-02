@@ -18,10 +18,10 @@ function removeFavorite(id) {
 
 <template>
   <div class="container">
-    <h1>⭐ Meus Favoritos</h1>
+    <h1>Meus Favoritos</h1>
 
     <div v-if="favorites.length === 0" class="empty">
-      Você ainda não favoritou nada 😢  
+      Você ainda não favoritou nada
     </div>
 
     <div class="grid">
@@ -34,7 +34,7 @@ function removeFavorite(id) {
         <h3>{{ item.title }}</h3>
 
         <button class="remove-btn" @click="removeFavorite(item.id)">
-          Remover ❌
+          Remover
         </button>
       </div>
     </div>
@@ -45,7 +45,7 @@ function removeFavorite(id) {
 .container {
   padding: 30px;
   text-align: center;
-  color: #fff;
+  color: #000000;
 }
 .grid {
   display: grid;

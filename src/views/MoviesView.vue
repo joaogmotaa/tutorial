@@ -1,112 +1,105 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import api from '@/plugins/axios'
-import Loading from 'vue-loading-overlay'
 import { useRouter } from 'vue-router'
 
+const API_KEY = "9a7da082db1aaf1a3d543ef8882edeb6"
 const router = useRouter()
-const isLoading = ref(false)
+
 const movies = ref([])
-
-
-const getGenreName = (id) => {
-  const genres = { 35: "Comédia" }
-  return genres[id] ?? ""
-}
-
-
-const formatDate = (date) =>
-  date ? new Date(date).toLocaleDateString('pt-BR') : ''
-
-
-const listComedyMovies = async () => {
-  isLoading.value = true
-  const response = await api.get('discover/movie', {
-    params: {
-      with_genres: 35,
-      language: 'pt-BR'
-    }
-  })
-  movies.value = response.data.results
-  isLoading.value = false
-}
-
-onMounted(() => listComedyMovies())
+const loading = ref(true)
+const error = ref(null)
 
 function openMovie(id) {
-  router.push({ name: 'MovieDetails', params: { id } })
+  router.push(`/movie/${id}`)
 }
+
+async function fetchMovies() {
+  loading.value = true
+  try {
+    const response = await fetch(
+      `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_genres=35&language=pt-BR`
+    )
+
+    if (!response.ok) throw new Error("Erro ao carregar filmes")
+
+    const data = await response.json()
+    movies.value = data.results
+  } catch (err) {
+    error.value = err.message
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(fetchMovies)
 </script>
 
 <template>
-  <h1>Filmes de Comédia</h1>
+  <div class="movie-container">
+    <h1>Filmes de Comédia</h1>
 
-  <loading v-model:active="isLoading" is-full-page />
+    <div v-if="loading" class="loading">Carregando...</div>
+    <div v-if="error" class="error">{{ error }}</div>
 
-  <div class="movie-list">
-    <div
-      v-for="movie in movies"
-      :key="movie.id"
-      class="movie-card"
-      @click="openMovie(movie.id)"
-    >
-      <img
-        :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`"
-        :alt="movie.title"
-      />
-      <div class="movie-details">
-        <p class="movie-title">{{ movie.title }}</p>
-        <p class="movie-release-date">{{ formatDate(movie.release_date) }}</p>
-
-        <p class="movie-genres">
-          <span v-for="genre_id in movie.genre_ids" :key="genre_id">
-            {{ getGenreName(genre_id) }}
-          </span>
-        </p>
+    <div class="movie-grid">
+      <div
+        v-for="movie in movies"
+        :key="movie.id"
+        class="movie-card"
+        @click="openMovie(movie.id)"
+      >
+        <img
+          :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`"
+          :alt="movie.title"
+        />
+        <h2>{{ movie.title }}</h2>
+        <p>{{ movie.release_date }}</p>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.movie-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6rem;
-  margin-left: 4rem;
+.movie-container {
+  padding: 20px;
+  text-align: center;
 }
+
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 5rem;
+  margin-top: 20px;
+}
+
 .movie-card {
-  width: 16rem;
-  height: 30rem;
-  border-radius: 0.5rem;
-  overflow: hidden;
-  box-shadow: 0 0 0.5rem #000000;
+  background: #111;
+  border-radius: 10px;
+  padding: 10px;
   cursor: pointer;
-  transition: 0.3s;
+  transition: transform 0.3s ease;
+  width: 15rem;
+  height: 28rem;
 }
+
 .movie-card:hover {
-  transform: scale(1.03);
+  transform: scale(1.05);
 }
-.movie-card img {
+
+img {
   width: 100%;
-  height: 20rem;
-  object-fit: cover;
+  border-radius: 10px;
 }
-.movie-details {
-  padding: 0 0.5rem;
-}
-.movie-genres span {
-  background-color: #000000;
-  border-radius: 0.5rem;
-  padding: 0.2rem 0.5rem;
+
+h2 {
+  font-size: 1rem;
+  margin: 10px 0 5px;
   color: #ffffff;
-  font-size: 0.8rem;
-  font-weight: bold;
 }
-h1 {
-  margin-left: 65rem;
-  margin-bottom: 2rem;
-  margin-top: 2rem;
-  font-size: 3rem;
+
+p {
+  opacity: 0.7;
+  font-size: 0.9rem;
+  color: #ffffff;
 }
 </style>

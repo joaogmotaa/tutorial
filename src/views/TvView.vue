@@ -13,7 +13,7 @@ const tvShows = ref([])
 const loading = ref(true)
 const error = ref(null)
 
-const API_KEY = "9a7da082db1aaf1a3d543ef8882edeb6" // coloque sua key aqui
+const API_KEY = "9a7da082db1aaf1a3d543ef8882edeb6"
 
 async function fetchTvShows() {
   loading.value = true
